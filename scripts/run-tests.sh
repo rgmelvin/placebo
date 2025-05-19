@@ -1,0 +1,1 @@
+../../beargrease/scripts/run-tests.sh
