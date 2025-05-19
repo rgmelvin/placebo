@@ -1,0 +1,21 @@
+name: Test with Beargrease
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: 📥 Checkout Placebo code
+        uses: actions/checkout@v3
+
+      - name: 🐻 Run Beargrease
+        uses: rgmelvin/beargrease-by-cabrillo@v1
+        with:
+          wallet-secret: ${{ secrets.TEST_USER_KEYPAIR }}
