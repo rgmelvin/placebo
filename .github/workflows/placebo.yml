@@ -69,3 +69,4 @@ jobs:
 
       - name: 🧪 Run Beargrease Tests
         run: ./scripts/run-tests.sh
+        working-directory: placebo
