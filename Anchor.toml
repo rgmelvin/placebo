@@ -13,7 +13,7 @@ url = "https://api.apr.dev"
 
 [provider]
 cluster = "localnet"
-wallet ="/root/.config/solana/id.json"
+wallet ="/wallet/id.json"
 
 
 
