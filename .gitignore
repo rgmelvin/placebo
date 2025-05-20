@@ -7,3 +7,5 @@ test-ledger
 .yarn
 .env
 .env.*
+# Never commit local test wallet
+/test-user.json
