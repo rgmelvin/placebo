@@ -23,4 +23,4 @@ jobs:
       - name: 🐻 Run Beargrease
         uses: rgmelvin/beargrease-by-cabrillo@v1.0.11
         with:
-          wallet-secret: ${{ secrets.TEST_USER_KEYPAIR }}
+          wallet-secret: ${{ secrets.TEST_USER_KEYPAIR_B64 }}
