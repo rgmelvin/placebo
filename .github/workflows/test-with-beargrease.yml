@@ -21,6 +21,6 @@ jobs:
           yarn install
 
       - name: 🐻 Run Beargrease
-        uses: rgmelvin/beargrease-by-cabrillo@v1.0.8
+        uses: rgmelvin/beargrease-by-cabrillo@v1.0.9
         with:
           wallet-secret: ${{ secrets.TEST_USER_KEYPAIR }}
