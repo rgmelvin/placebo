@@ -15,6 +15,9 @@ jobs:
       - name: 📥 Checkout Placebo code
         uses: actions/checkout@v3
 
+      - name: 📂 Prepare wallet volume mount
+        run: mkdir -p .wallet-volume
+
       - name: 🧶 Install JavaScript Dependencies
         run: |
           echo "Installing JS dependencies..."
