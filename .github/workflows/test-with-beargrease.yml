@@ -39,7 +39,10 @@ jobs:
           curl -sSf https://raw.githubusercontent.com/project-serum/anchor/master/scripts/install-anchor.sh | sh
 
       - name: ➕ Add Anchor to PATH
-        run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+        run: echo "$HOME/.cargo/bin" | tee -a $GITHUB_PATH
+
+      - name: 🧪 Confirm Anchor is Installed
+        run: anchor --version
 
       - name: 🐻 Run Beargrease
         uses: rgmelvin/beargrease-by-cabrillo@v1.0.19
