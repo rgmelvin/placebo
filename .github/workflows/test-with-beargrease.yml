@@ -23,6 +23,21 @@ jobs:
           echo "Installing JS dependencies..."
           yarn install
 
+      - name: ⚓ Install Anchor CLI (with caching)
+        id: install-anchor
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/anchor
+            ~/.config/solana
+            ~/.local/share/solana
+          key: anchor-cli-v0.29.0
+
+      - name: 🧰 Install Anchor (if not cached)
+        if: steps.install-anchor.outputs.cache-hit != 'true'
+        run: |
+          curl -sSf https://raw.githubusercontent.com/project-serum/anchor/master/scripts/install-anchor.sh | sh
+
       - name: 🐻 Run Beargrease
         uses: rgmelvin/beargrease-by-cabrillo@v1.0.19
         with:
