@@ -58,6 +58,6 @@ jobs:
 
       # Step 9: 🐻 Run Beargrease test harness
       - name: 🐻 Run Beargrease
-        uses: rgmelvin/beargrease-by-cabrillo@v1.0.22
+        uses: rgmelvin/beargrease-by-cabrillo@v1.0.23
         with:
           wallet-secret: ${{ secrets.TEST_USER_KEYPAIR_B64 }}
