@@ -33,7 +33,7 @@ jobs:
       # Step 4: Install Anchor CLI (via cargo, same as your Solana email CI)
       - name: ⚓ Install Anchor CLI (cargo)
         run: |
-          cargo install --git https://github.com/coral-xyz/anchor --tag v0.31.0 anchor-cli --locked --force
+          cargo install --git https://github.com/coral-xyz/anchor --tag v0.31.1 anchor-cli --locked --force
 
       # Step 5: Confirm Anchor version
       - name: 📌 Confirm Anchor version
