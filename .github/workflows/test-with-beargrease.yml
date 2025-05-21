@@ -18,31 +18,47 @@ jobs:
       - name: 📂 Prepare wallet volume mount
         run: mkdir -p .wallet-volume
 
-      - name: 🧶 Install JavaScript Dependencies
-        run: |
-          echo "Installing JS dependencies..."
-          yarn install
+      - name: 🦀 Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
 
-      - name: ⚓ Install Anchor CLI (with caching)
-        id: install-anchor
+      - name: 📦 Cache Rust Dependencies
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cargo/bin/anchor
-            ~/.config/solana
-            ~/.local/share/solana
-          key: anchor-cli-v0.29.0
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: 🧰 Install Anchor (if not cached)
-        if: steps.install-anchor.outputs.cache-hit != 'true'
+      - name: ⚓ Install Anchor CLI (from Coral GitHub)
         run: |
-          curl -sSf https://raw.githubusercontent.com/project-serum/anchor/master/scripts/install-anchor.sh | sh
+          cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
 
       - name: ➕ Add Anchor to PATH
-        run: echo "$HOME/.cargo/bin" | tee -a $GITHUB_PATH
+        run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
-      - name: 🧪 Confirm Anchor is Installed
-        run: anchor --version
+      - name: 🔧 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: 💾 Cache Node Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: 🧶 Install JS Dependencies
+        run: yarn install
+
+      - name: ➕ Add node_modules/.bin to PATH
+        run: echo "$(pwd)/node_modules/.bin" >> $GITHUB_PATH
+
+      - name: 🌐 Set SBF_RUSTC for Anchor
+        run: echo "SBF_RUSTC=$(which rustc)" >> $GITHUB_ENV
 
       - name: 🐻 Run Beargrease
         uses: rgmelvin/beargrease-by-cabrillo@v1.0.19
