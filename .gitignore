@@ -9,3 +9,4 @@ test-ledger
 .env.*
 # Never commit local test wallet
 /test-user.json
+.wallet/
