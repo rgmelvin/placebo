@@ -14,24 +14,9 @@ jobs:
       - name: 🧾 Checkout repository
         uses: actions/checkout@v4
 
-      - name: ⚙️ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: 🦀 Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-
-      - name: ⛓️ Install Anchor
-        run: |
-          cargo install --git https://github.com/coral-xyz/anchor anchor-cli --tag v0.31.1 --force
-
       - name: 🐻 Run Beargrease test harness
+        uses: rgmelvin/beargrease-by-cabrillo@v1.0.29
+        with:
+          test-runner: auto
         env:
           BEARGREASE_WALLET_SECRET: ${{ secrets.BEARGREASE_WALLET_SECRET }}
-        run: |
-          chmod +x ./scripts/run-tests.sh
-          ./scripts/run-tests.sh
