@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🐻 Run Beargrease test harness
-        uses: rgmelvin/beargrease-by-cabrillo@v1.0.30
+        uses: rgmelvin/beargrease-by-cabrillo@v1.0.31
         with:
           test-runner: auto
         env:
