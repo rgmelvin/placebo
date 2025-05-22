@@ -108,6 +108,5 @@ Contact: [cabrilloweb3@gmail.com](mailto:cabrilloweb3@gmail.com)
 ## 💬 About Cabrillo!, Labs
 
 Cabrillo!, Labs builds transparent tools for decentralized systems and scientific ownership.  
-Beargrease and Placebo are part of a broader effort to bring clarity, reproducibility, and equity to Web3 and research ecosystems.
-
+Beargrease and Placebo are part of a broader effort to bring clarity, reproducibility, and equity to Web3 and research ecosystems!
 ---
