@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "test": "node --loader ts-node/esm node_modules/.bin/mocha -t 1000000 tests/**/*.{ts,mts}"
+    "test": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"))' --no-warnings node_modules/.bin/mocha -t 1000000 tests/**/*.{ts,mts}"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.31.1",
