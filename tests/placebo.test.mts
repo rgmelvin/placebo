@@ -1,6 +1,6 @@
 import { assert } from "chai";
 // @ts-ignore
-import { loadProgram } from "bg-testkit";
+import { loadProgram } from "../test-utils/bg-testkit/loadProgram.mts";
 
 describe("placebo", () => {
   it("calls say_hello", async () => {
