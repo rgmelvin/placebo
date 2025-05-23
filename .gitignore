@@ -1,6 +1,5 @@
 .anchor
 .DS_Store
-target/
 **/*.rs.bk
 node_modules/
 test-ledger
@@ -10,3 +9,18 @@ test-ledger
 # Never commit local test wallet
 /test-user.json
 .wallet/
+
+# Anchor + Solana
+.target/
+target/
+.migrations/
+.ledger/
+
+# Logs and backups
+*.log
+*.bak
+*.out
+*.txt
+
+# Node.js
+node_modules/
