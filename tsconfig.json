@@ -6,12 +6,14 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "strict": true,
-    "types": ["mocha", "chai"],
+    "types": ["mocha", "chai", "node"],
     "typeRoots": ["./node_modules/@types"],
-    "lib": ["ES2022"],
+    "lib": ["ES2022", "dom"],
     "baseUrl": ".",
     "outDir": "dist"
   },
-  "include": ["tests/**/*.ts"]
+  "include": ["tests/**/*.ts", "tests/**/*.mts", "test-utils/**/*.ts","test-utils/**/*.mts", "../beargrease/test-utils/**/*.ts", "../beargrease/test-utils/**/*.mts"]
 }
