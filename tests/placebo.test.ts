@@ -1,40 +1,36 @@
-// tests/placebo.test.ts
-
-import { readFileSync } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { AnchorProvider, Program, setProvider, Idl } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { assert } from "chai";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Anchor imports (CommonJS-safe)
-import pkg from "@coral-xyz/anchor";
-const { Program, AnchorProvider, setProvider } = pkg;
-
-
-// Required for __dirname under ESM
+// ESM-compatible __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// === Load program ID dynamically from Anchor.toml ===
-const anchorToml = readFileSync(path.resolve(__dirname, "../Anchor.toml"), "utf8");
+// Load Anchor.toml and extract program ID
+const anchorTomlPath = path.resolve(__dirname, "..", "Anchor.toml");
+const anchorToml = fs.readFileSync(anchorTomlPath, "utf8");
 const match = anchorToml.match(/placebo\s*=\s*"([^"]+)"/);
-if (!match) throw new Error("❌ Could not extract program ID from Anchor.toml");
-const programId = new PublicKey(match[1]);
+const fallbackProgramId = "DEdLFqehJ6knPRqEYfJkhaNXowbDNxivZvqRwvsixd6L";
+const programId = new PublicKey(match?.[1] ?? fallbackProgramId);
 
-// === Load IDL from target directory ===
-const idlPath = path.resolve(__dirname, "../target/idl/placebo.json");
-const placeboIdl = JSON.parse(readFileSync(idlPath, "utf8"));
+// ✅ Load and assert IDL type
+import rawIdl from "../target/idl/placebo.json" with { type: "json" };
+const idl: Idl = rawIdl as Idl;
 
-// === Setup Anchor provider ===
+// ✅ Setup provider
 const provider = AnchorProvider.env();
 setProvider(provider);
 
-// === Program handle ===
-const program = new Program(placeboIdl, programId, provider);
+// ✅ Construct program with assertive types
+const program: Program = new Program<Idl>(idl, programId, provider);
 
-// === Tests ===
 describe("placebo", () => {
-  it("loads the program successfully", async () => {
-    assert.isTrue(program.programId instanceof PublicKey);
+  it("calls say_hello successfully", async () => {
+    const tx = await program.methods.sayHello().rpc();
+    console.log("📝 Transaction signature:", tx);
+    assert.isString(tx);
   });
 });
