@@ -1,6 +1,6 @@
 import { assert } from "chai";
 // @ts-ignore
-import { getProgram } from "file:///home/rgmelvin/Projects/cabrillo/beargrease/test-utils/program.mts";
+import { getProgram } from "../../beargrease/test-utils/program.mts";
 
 describe("placebo", () => {
   it("calls say_hello", async () => {
