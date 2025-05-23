@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "test": "node_modules/.bin/ts-mocha -p tsconfig.json -t 1000000 tests/**/*.ts"
+    "test": "node --loader ts-node/esm node_modules/.bin/mocha -p tsconfig.json -t 1000000 tests/**/*.ts"
   },
   "dependencies": {
     "@coral-xyz/anchor": "0.31.1",
