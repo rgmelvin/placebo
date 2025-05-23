@@ -30,6 +30,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: 🧬 Symlink bg-testkit into node_modules
+        run: |
+          mkdir -p node_modules
+          ln -s ../../beargrease/beargrease/bg-testkit node_modules/bg-testkit
+
       - name: 🐻 Run Beargrease test harness
         uses: rgmelvin/beargrease-by-cabrillo@v1.0.36
         with:
