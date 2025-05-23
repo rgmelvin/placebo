@@ -14,8 +14,24 @@ jobs:
       - name: 🧾 Checkout repository
         uses: actions/checkout@v4
 
+      - name: 🧰 Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: ♻️ Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            .yarn/cache
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: 🐻 Run Beargrease test harness
-        uses: rgmelvin/beargrease-by-cabrillo@v1.0.33
+        uses: rgmelvin/beargrease-by-cabrillo@v1.0.34
         with:
           test-runner: auto
         env:
