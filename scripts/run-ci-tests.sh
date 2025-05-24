@@ -31,11 +31,23 @@ done
 WALLET_PATH="$PROJECT_ROOT/.wallet/id.json"
 export ANCHOR_WALLET="$WALLET_PATH"
 
+# ----------------------------------------------------------------------
+# 3B. Decode BEARGREASE_WALLET_SECRET (if available)
+# ----------------------------------------------------------------------
+if [[ -n "${BEARGREASE_WALLET_SECRET:-}" ]]; then
+    echo "📬 Decoding injected wallet from BEARGREASE_WALLET_SECRET"
+    mkdir -p .wallet
+    echo "$BEARGREASE_WALLET_SECRET" | base64 -d > .wallet/id.json
+    touch .wallet/_was_injected
+fi
+
 if [[ ! -f "$WALLET_PATH" ]]; then
     echo "❌ Wallet not found at $WALLET_PATH"
     exit 1
 fi
 echo "🔐 Using CI wallet: $ANCHOR_WALLET"
+
+
 
 # ------------------------------------------------------------------------
 # 4. Build and deploy
@@ -74,7 +86,7 @@ done
 # 7. Run tests
 # ----------------------------------------------------------------------
 if [ -f "package.json" ] && jq -e '.scripts.test' package.json > /dev/null; then
-    echo " ⚙️🍫 Running mocha tests via yarn..."
+    echo " ⚙️☕ Running mocha tests via yarn..."
     yarn test
 else
     echo "⚙️⚓ Running anchor test (fallback)..."
