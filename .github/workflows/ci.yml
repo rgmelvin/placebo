@@ -35,9 +35,8 @@ jobs:
           mkdir -p node_modules
           ln -s ../../beargrease/beargrease/bg-testkit node_modules/bg-testkit
 
-      - name: 🐻 Run Beargrease test harness
-        uses: rgmelvin/beargrease-by-cabrillo@v1.0.55
-        with:
-          test-runner: auto
+      - name: 🐻 Run Beargrease CI test harness
+        run: ./scripts/run-ci-tests.sh
         env:
-          BEARGREASE_WALLET_SECRET: ${{ secrets.BEARGREASE_WALLET_SECRET }}
+          ANCHOR_WALLET: .wallet/id.json
+
