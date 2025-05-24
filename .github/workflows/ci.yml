@@ -36,7 +36,7 @@ jobs:
           ln -s ../../beargrease/beargrease/bg-testkit node_modules/bg-testkit
 
       - name: 🐻 Run Beargrease test harness
-        uses: rgmelvin/beargrease-by-cabrillo@v1.0.48
+        uses: rgmelvin/beargrease-by-cabrillo@v1.0.49
         with:
           test-runner: auto
         env:
