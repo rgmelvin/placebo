@@ -28,8 +28,7 @@ done
 # ----------------------------------------------------------------------
 # 3. Use injected CI wallet
 # ----------------------------------------------------------------------
-WALLET_PATH="$PROJECT_ROOT/.wallet/id.json"
-export ANCHOR_WALLET="$WALLET_PATH"
+
 
 # ----------------------------------------------------------------------
 # 3B. Decode BEARGREASE_WALLET_SECRET (if available)
@@ -41,10 +40,14 @@ if [[ -n "${BEARGREASE_WALLET_SECRET:-}" ]]; then
     touch .wallet/_was_injected
 fi
 
+WALLET_PATH="$PROJECT_ROOT/.wallet/id.json"
+export ANCHOR_WALLET="$WALLET_PATH"
+
 if [[ ! -f "$WALLET_PATH" ]]; then
     echo "❌ Wallet not found at $WALLET_PATH"
     exit 1
 fi
+
 echo "🔐 Using CI wallet: $ANCHOR_WALLET"
 
 

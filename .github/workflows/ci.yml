@@ -39,4 +39,5 @@ jobs:
         run: ./scripts/run-ci-tests.sh
         env:
           ANCHOR_WALLET: .wallet/id.json
+          BEARGREASE_WALLET_SECRET: ${{ secrets.BEARGREASE_WALLET_SECRET }}
 
