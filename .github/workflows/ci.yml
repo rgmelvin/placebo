@@ -23,6 +23,8 @@ jobs:
         run: |
           curl -sSf https://release.anchor.so/install.sh | sh
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.cargo/bin:$PATH"
+          anchor --version
 
       - name: ♻️ Cache Node.js dependencies
         uses: actions/cache@v3
