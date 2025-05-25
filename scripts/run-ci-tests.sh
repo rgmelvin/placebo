@@ -34,7 +34,21 @@ for i in {1..60}; do
 done
 
 # ----------------------------------------------------------------------
-# 3. Ensure Wallet Exists
+# 3A. Inject Wallet from Secret (if present)
+# ----------------------------------------------------------------------
+if [[ -n "${BEARGREASE_WALLET_SECRET:-}" ]]; then
+    echo "📬 Decoding injected wallet from BEARGREASE_WALLET_SECRET"
+    mkdir -p "$(dirname "$WALLET_PATH")"
+
+    # Decode base64-encoded JSON array directly to .wallet/id.json
+    echo "$BEARGREASE_WALLET_SECRET" | base64 --decode > "$WALLET_PATH"
+
+    # Optional: preview beginning of file to confirm format
+    head "$WALLET_PATH" || true
+fi
+
+# ----------------------------------------------------------------------
+# 3B. Ensure Wallet Exists
 # ----------------------------------------------------------------------
 if [[ ! -f "$WALLET_PATH" ]]; then
     echo "❌ Wallet not found at $WALLET_PATH"
