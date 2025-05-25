@@ -7,14 +7,14 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-placebo = "PROGRAM_ID_PLACEHOLDER"
+placebo = "4s8JMB7Pbp8JSSXgFrvc41uodD9dvFdj9f6Sv8pWXwZF"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "localnet"
-wallet = ".wallet/id.json"
+wallet = "/home/rgmelvin/Projects/cabrillo/placebo/.wallet/id.json"
 
 
 

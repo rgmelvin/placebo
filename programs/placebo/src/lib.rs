@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("DEdLFqehJ6knPRqEYfJkhaNXowbDNxivZvqRwvsixd6L");
+declare_id!("4s8JMB7Pbp8JSSXgFrvc41uodD9dvFdj9f6Sv8pWXwZF");
 
 #[program]
 pub mod placebo {
