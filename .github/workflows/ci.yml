@@ -22,8 +22,7 @@ jobs:
       - name: ⚓ Install Anchor CLI
         run: |
           curl -sSf https://release.anchor.so/install.sh | sh
-        env:
-          PATH: "${HOME}/.cargo/bin:${PATH}"
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: ♻️ Cache Node.js dependencies
         uses: actions/cache@v3
