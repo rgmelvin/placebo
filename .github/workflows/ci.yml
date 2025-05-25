@@ -21,7 +21,7 @@ jobs:
 
       - name: ⚓ Install Anchor CLI
         run: |
-          curl -sSf https://release.anchor.so/install.sh | sh
+          curl -sSf https://raw.githubusercontent.com/coral-xyz/anchor/master/install/anchor-install.sh | sh
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
           export PATH="$HOME/.cargo/bin:$PATH"
           anchor --version
