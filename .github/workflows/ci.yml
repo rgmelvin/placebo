@@ -19,13 +19,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: ⚓ Install Solana CLI via Anza
+      - name: ⚓ Install Solana CLI via Anza (prebuilt)
         run: |
-          cargo install anza-cli --git https://github.com/anza-xyz/anza --locked
-          anza install solana@1.18.3
-          anza use solana@1.18.3
+          curl -sSf https://install.anza.xyz | bash
           echo "$HOME/.anza/bin" >> $GITHUB_PATH
           export PATH="$HOME/.anza/bin:$PATH"
+
+          anza install solana@1.18.3
+          anza use solana@1.18.3
+
           solana --version
 
       - name: 🚀 Install Anchor CLI via AVM
@@ -33,8 +35,10 @@ jobs:
           cargo install --git https://github.com/coral-xyz/anchor avm --force
           avm install latest
           avm use latest
+
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
           export PATH="$HOME/.cargo/bin:$PATH"
+
           anchor --version
 
       - name: ♻️ Cache Node.js dependencies
