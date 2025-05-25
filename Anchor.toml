@@ -14,7 +14,7 @@ url = "https://api.apr.dev"
 
 [provider]
 cluster = "localnet"
-wallet = ".wallet/id.json"
+wallet = "/home/rgmelvin/Projects/cabrillo/placebo/.wallet/id.json"
 
 
 
