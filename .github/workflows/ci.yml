@@ -19,11 +19,12 @@ jobs:
         with:
           node-version: 18
 
-      - name: ⚓ Install Anchor CLI
+      - name: ⚓ Install Anchor CLI via AVM
         run: |
-          curl -sSf https://raw.githubusercontent.com/coral-xyz/anchor/master/install/anchor-install.sh | sh
+          cargo install --git https://github.com/coral-xyz/anchor avm --force
+          avm install latest
+          avm use latest
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.cargo/bin:$PATH"
           anchor --version
 
       - name: ♻️ Cache Node.js dependencies
