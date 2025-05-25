@@ -19,14 +19,11 @@ jobs:
         with:
           node-version: 18
 
-      - name: ⚓ Install Solana CLI via Anza (prebuilt)
+      - name: ⚓ Install Solana CLI (official)
         run: |
-          curl -sSf https://install.anza.xyz | bash
-          echo "$HOME/.anza/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.anza/bin:$PATH"
-
-          anza install solana@1.18.3
-          anza use solana@1.18.3
+          sh -c "$(curl -sSfL https://release.solana.com/v1.18.3/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 
           solana --version
 
