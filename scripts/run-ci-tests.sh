@@ -4,7 +4,7 @@ set -euo pipefail
 PROJECT_ROOT="$(pwd)"
 ANCHOR_PROVIDER_URL="http://localhost:8899"
 export  ANCHOR_PROVIDER_URL
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.anza/bin:$HOME/.cargo/bin:$PATH"
 
 echo "📦 Running Beargrease CI pipeline"
 
@@ -13,6 +13,9 @@ echo "📦 Running Beargrease CI pipeline"
 # ----------------------------------------------------------------------
 echo "🚀 Starting Solana validator"
 docker compose -f .beargrease/docker-compose.yml up -d
+
+# Ensure solana CLI talks to local validator
+solana config set --url "$ANCHOR_PROVIDER_URL"
 
 # ----------------------------------------------------------------------
 # 2. Wait for validator health
