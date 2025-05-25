@@ -4,6 +4,8 @@ set -euo pipefail
 PROJECT_ROOT="$(pwd)"
 ANCHOR_PROVIDER_URL="http://localhost:8899"
 export  ANCHOR_PROVIDER_URL
+export PATH="$HOME/.cargo/bin:$PATH"
+
 
 echo "📦 Running Beargrease CI pipeline"
 
