@@ -1,2 +1,2 @@
 #!/bin/bash
-exec ../beargrease/scripts/run-tests.sh
+exec ./beargrease/scripts/run-tests.sh

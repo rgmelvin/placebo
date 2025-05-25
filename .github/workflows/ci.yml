@@ -19,7 +19,7 @@ jobs:
         with:
           repository: rgmelvin/beargrease-by-cabrillo
           ref: ci-dev
-          path: ../beargrease
+          path: beargrease
 
       - name: 🧰 Set up Rust toolchain
         uses: actions-rs/toolchain@v1
