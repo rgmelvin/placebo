@@ -14,12 +14,14 @@ jobs:
       - name: 🧾 Checkout placebo repository
         uses: actions/checkout@v4
 
-      - name: 📥 Checkout Beargrease
+      - name: 📥 Checkout Beargrease (force fresh)
         uses: actions/checkout@v4
         with:
           repository: rgmelvin/beargrease-by-cabrillo
           ref: ci-dev
           path: beargrease
+          fetch-depth: 0
+          clean: true
 
       - name: 🧰 Set up Rust toolchain
         uses: actions-rs/toolchain@v1
