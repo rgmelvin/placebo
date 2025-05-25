@@ -14,31 +14,44 @@ jobs:
       - name: 🧾 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🧰 Set up Node.js
+      - name: 🧰 Set up Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: 💾 Cache Cargo registry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: 💾 Cache Cargo git repos
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: ⚓ Install Solana CLI (Anza recommended)
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          solana --version
+
+      - name: 🚀 Install Anchor CLI (v0.31.1)
+        run: |
+          cargo install --git https://github.com/coral-xyz/anchor --tag v0.31.1 anchor-cli --locked --force
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.cargo/bin:$PATH"
+          anchor --version
+
+      - name: 🧬 Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: ⚓ Install Solana CLI (official)
-        run: |
-          sh -c "$(curl -sSfL https://release.solana.com/v1.18.3/install)"
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-
-          solana --version
-
-      - name: 🚀 Install Anchor CLI via AVM
-        run: |
-          cargo install --git https://github.com/coral-xyz/anchor avm --force
-          avm install latest
-          avm use latest
-
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.cargo/bin:$PATH"
-
-          anchor --version
-
-      - name: ♻️ Cache Node.js dependencies
+      - name: 💾 Cache Node dependencies
         uses: actions/cache@v3
         with:
           path: |
@@ -49,13 +62,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: 🧬 Symlink bg-testkit into node_modules
+      - name: 📦 Install Node dependencies
+        run: yarn install
+
+      - name: ➕ Add node_modules/.bin to PATH
+        run: echo "$(pwd)/node_modules/.bin" >> $GITHUB_PATH
+
+      - name: 🐻 Symlink bg-testkit into node_modules
         run: |
           mkdir -p node_modules
           ln -s ../../beargrease/beargrease/bg-testkit node_modules/bg-testkit
 
-      - name: 🐻 Run Beargrease CI test harness
-        run: ./scripts/run-ci-tests.sh
+      - name: 🔐 Inject Anchor Wallet from Secret
+        run: |
+          mkdir -p .wallet
+          echo "$BEARGREASE_WALLET_SECRET" | base64 -d > .wallet/id.json
+          echo "ANCHOR_WALLET=$(pwd)/.wallet/id.json" >> $GITHUB_ENV
         env:
-          ANCHOR_WALLET: .wallet/id.json
           BEARGREASE_WALLET_SECRET: ${{ secrets.BEARGREASE_WALLET_SECRET }}
+
+      - name: 🧪 Run Beargrease CI Harness
+        run: ./scripts/run-ci-tests.sh

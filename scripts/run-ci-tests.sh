@@ -3,24 +3,27 @@ set -euo pipefail
 
 PROJECT_ROOT="$(pwd)"
 ANCHOR_PROVIDER_URL="http://localhost:8899"
-export  ANCHOR_PROVIDER_URL
-export PATH="$HOME/.anza/bin:$HOME/.cargo/bin:$PATH"
+WALLET_PATH="$PROJECT_ROOT/.wallet/id.json"
+
+export ANCHOR_PROVIDER_URL
+export ANCHOR_WALLET="$WALLET_PATH"
+export PATH="$HOME/.cargo/bin:$HOME/.local/share/solana/install/active_release/bin:$PATH"
 
 echo "📦 Running Beargrease CI pipeline"
 
 # ----------------------------------------------------------------------
 # 1. Start Validator
 # ----------------------------------------------------------------------
-echo "🚀 Starting Solana validator"
+echo "🚀 Starting Solana validator in Docker"
 docker compose -f .beargrease/docker-compose.yml up -d
 
-# Ensure solana CLI talks to local validator
+# Ensure solana CLI targets the test validator
 solana config set --url "$ANCHOR_PROVIDER_URL"
 
 # ----------------------------------------------------------------------
-# 2. Wait for validator health
+# 2. Wait for Validator Health
 # ----------------------------------------------------------------------
-echo "⏳ Waiting for validator RPC using solana CLI..."
+echo "⏳ Waiting for validator to become responsive..."
 for i in {1..60}; do
     if solana cluster-version > /dev/null 2>&1; then
         echo "✅ Validator RPC is responsive (attempt $i)"
@@ -31,43 +34,26 @@ for i in {1..60}; do
 done
 
 # ----------------------------------------------------------------------
-# 3. Use injected CI wallet
+# 3. Ensure Wallet Exists
 # ----------------------------------------------------------------------
-
-
-# ----------------------------------------------------------------------
-# 3B. Decode BEARGREASE_WALLET_SECRET (if available)
-# ----------------------------------------------------------------------
-if [[ -n "${BEARGREASE_WALLET_SECRET:-}" ]]; then
-    echo "📬 Decoding injected wallet from BEARGREASE_WALLET_SECRET"
-    mkdir -p .wallet
-    echo "$BEARGREASE_WALLET_SECRET" | base64 -d > .wallet/id.json
-    touch .wallet/_was_injected
-fi
-
-WALLET_PATH="$PROJECT_ROOT/.wallet/id.json"
-export ANCHOR_WALLET="$WALLET_PATH"
-
 if [[ ! -f "$WALLET_PATH" ]]; then
     echo "❌ Wallet not found at $WALLET_PATH"
     exit 1
 fi
 
-echo "🔐 Using CI wallet: $ANCHOR_WALLET"
+echo "🔐 Using wallet: $WALLET_PATH"
 
-
-
-# ------------------------------------------------------------------------
-# 4. Build and deploy
-# ------------------------------------------------------------------------
-echo "🔨 Building program..."
+# ----------------------------------------------------------------------
+# 4. Build and Deploy
+# ----------------------------------------------------------------------
+echo "🔨 Building program with Anchor..."
 anchor build
 
 echo "⛵ Deploying program..."
 anchor deploy
 
 # ----------------------------------------------------------------------
-# 5. Get program ID
+# 5. Extract Program ID
 # ----------------------------------------------------------------------
 IDL_PATH="$PROJECT_ROOT/target/idl/placebo.json"
 PROGRAM_ID=$(jq -r '.metadata.address // empty' "$IDL_PATH")
@@ -78,9 +64,9 @@ if [[ -z "$PROGRAM_ID" ]]; then
 fi
 
 # ----------------------------------------------------------------------
-# 6. Wait for validator to index program
+# 6. Wait for Program to Be Indexed
 # ----------------------------------------------------------------------
-echo "⏳ Waiting for validator to recognize program ID..."
+echo "🔎 Waiting for validator to recognize program ID: $PROGRAM_ID"
 for i in {1..60}; do
     if solana program show "$PROGRAM_ID" > /dev/null 2>&1; then
         echo "✅ Program indexed (attempt $i)"
@@ -91,20 +77,20 @@ for i in {1..60}; do
 done
 
 # ----------------------------------------------------------------------
-# 7. Run tests
+# 7. Run Tests
 # ----------------------------------------------------------------------
 if [ -f "package.json" ] && jq -e '.scripts.test' package.json > /dev/null; then
-    echo " ⚙️☕ Running mocha tests via yarn..."
+    echo "☕ Running Mocha tests via yarn..."
     yarn test
 else
-    echo "⚙️⚓ Running anchor test (fallback)..."
+    echo "⚓ Running anchor test (fallback)..."
     anchor test --skip-local-validator
 fi
 
 # ----------------------------------------------------------------------
-# Shut down validator
+# 8. Shut Down Validator
 # ----------------------------------------------------------------------
 echo "🛑 Shutting down validator"
 docker compose -f .beargrease/docker-compose.yml down
 
-echo "✅ CI Pipeline complete"
+echo "✅ Beargrease CI pipeline complete"
