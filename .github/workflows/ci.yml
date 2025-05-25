@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      BEARGREASE_WALLET_SECRET: ${{ secrets.BEARGREASE_WALLET_SECRET }}
 
     steps:
       - name: 🧾 Checkout placebo repository
@@ -84,3 +86,5 @@ jobs:
 
       - name: 🧪 Run Beargrease CI Harness
         run: ./scripts/run-ci-tests.sh
+        env:
+          BEARGREASE_WALLET_SECRET: ${{ secrets.BEARGREASE_WALLET_SECRET }}
