@@ -73,13 +73,5 @@ jobs:
           mkdir -p node_modules
           ln -s ../../beargrease/beargrease/bg-testkit node_modules/bg-testkit
 
-      - name: 🔐 Inject Anchor Wallet from Secret
-        run: |
-          mkdir -p .wallet
-          echo "$BEARGREASE_WALLET_SECRET" | base64 -d > .wallet/id.json
-          echo "ANCHOR_WALLET=$(pwd)/.wallet/id.json" >> $GITHUB_ENV
-        env:
-          BEARGREASE_WALLET_SECRET: ${{ secrets.BEARGREASE_WALLET_SECRET }}
-
       - name: 🧪 Run Beargrease CI Harness
         run: ./scripts/run-ci-tests.sh
