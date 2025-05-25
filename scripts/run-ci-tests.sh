@@ -17,12 +17,13 @@ docker compose -f .beargrease/docker-compose.yml up -d
 # ----------------------------------------------------------------------
 # 2. Wait for validator health
 # ----------------------------------------------------------------------
-echo "⏳ Waiting for validator health check..."
+echo "⏳ Waiting for validator RPC using solana CLI..."
 for i in {1..60}; do
-    if curl -s --fail "$ANCHOR_PROVIDER_URL" > /dev/null; then
-        echo "✅ Validator RPC is responisve (attempt $i)"
+    if solana cluster-version > /dev/null 2>&1; then
+        echo "✅ Validator RPC is responsive (attempt $i)"
         break
     fi
+    echo "⏳ Attempt $i: still waiting..."
     sleep 1
 done
 
