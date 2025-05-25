@@ -11,8 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧾 Checkout repository
+      - name: 🧾 Checkout placebo repository
         uses: actions/checkout@v4
+
+      - name: 📥 Checkout Beargrease
+        uses: actions/checkout@v4
+        with:
+          repository: rgmelvin/beargrease-by-cabrillo
+          ref: ci-dev
+          path: ../beargrease
 
       - name: 🧰 Set up Rust toolchain
         uses: actions-rs/toolchain@v1
