@@ -40,19 +40,11 @@ if [[ -n "${BEARGREASE_WALLET_SECRET:-}" ]]; then
     echo "📬 Decoding injected wallet from BEARGREASE_WALLET_SECRET"
     mkdir -p "$(dirname "$WALLET_PATH")"
 
-    # Decode and rewrite the array to valid keypair format
-    RAW_ARRAY=$(echo "$BEARGREASE_WALLET_SECRET" | base64 --decode)
-    TMP_FILE=$(mktemp)
+    # Correct: Write raw base64-decoded array directly to .wallet/id.json
+    echo "$BEARGREASE_WALLET_SECRET" | base64 --decode > "$WALLET_PATH"
 
-    # Write raw array to temp file
-    echo "$RAW_ARRAY" > "$TMP_FILE"
-
-    # Convert to valid keypair JSON format
-    PUBKEY=$(solana-keygen pubkey "$TMP_FILE")
-    echo "{\"publicKey\":\"$PUBKEY\",\"secretKey\":$RAW_ARRAY}" > "$WALLET_PATH"
-
-    echo "🪪 Reconstructed keypair file:"
-    cat "$WALLET_PATH"
+    # DEBUGGING how public key for verification
+    solana-keygen pubkey "$WALLET_PATH" || echo "⚠️ Unable to show pubkey (may still be valid)"
 fi
 
 
