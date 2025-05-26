@@ -19,6 +19,12 @@ export async function loadProgram<IDL extends Idl>(programName: string): Promise
   const metadata = (idl as any).metadata;
   const programId = metadata?.address;
 
+  // === 🔍 DIAGNOSTICS ===
+  console.log("🧪 === DIAGNOSTIC: IDL Loaded During Test ___");
+  console.log(`📍 Path: ${idlPath}`);
+  console.log(`🧾 ID: ${programId}`);
+  // === 🔍 DIAGNOSTICS ===
+
   if (typeof programId !== "string") {
     throw new Error(`❌ IDL for "${programName}" must include a valid program ID in metadata.address`);
   }
