@@ -104,7 +104,7 @@ rm -rf .wallet .beargrease
 
 ## 📚 References
 
-- [Beargrease Documentation](https://github.com/rgmelvin/beargrease)
+- [Beargrease Documentation](https://github.com/rgmelvin/beargrease-by-cabrillo)
 - [Anchor Docs](https://book.anchor-lang.com/)
 - [Solana CLI](https://docs.solana.com/cli)
 
