@@ -1,79 +1,120 @@
-# Placebo – Example Solana Anchor Project Using Beargrease
+# Placebo 🧪
 
-This is a minimal, working Solana Anchor test program built to demonstrate local and CI-based testing using [Beargrease](https://github.com/rgmelvin/beargrease-by-cabrillo).
-
-Maintained by **Cabrillo! Labs** – contact: cabrilloweb3@gmail.com
+Placebo is a minimal Solana Anchor test program used to validate local and CI-based test harnesses — particularly the [Beargrease](https://github.com/rgmelvin/beargrease) Docker test harness.
 
 ---
 
-## 🧪 What’s in This Repo
+## 📁 Project Structure
 
-This project is a functional Anchor program and test suite that demonstrates:
-
-- Local testing using Beargrease v1.0.x
-- GitHub CI testing using Beargrease v1.1.0 Directory Checkout Mode
-- Dynamic program ID injection and validator setup
-- Mocha test integration via TypeScript ESM
-
----
-
-## 🧰 Prerequisites
-
-You will need:
-
-- Anchor v0.31.1
-- Solana CLI
-- Docker (for validator)
-- Node.js with `pnpm` or `npm`
-- `ts-node` and `mocha`
-
-See the [Beargrease Beginner Guides](https://github.com/rgmelvin/beargrease-by-cabrillo/tree/main/docs) for installation instructions.
-
----
-
-## 🧭 How to Use This Project
-
-### ▶️ Local Mode
-
-1. Clone this repo and Beargrease:
-   ```bash
-   git clone https://github.com/rgmelvin/placebo
-   git clone https://github.com/rgmelvin/beargrease-by-cabrillo
-Copy the Beargrease scripts:
-
-cp -r ../beargrease-by-cabrillo/scripts ./scripts/beargrease
-chmod +x ./scripts/beargrease/*.sh
-Create a test wallet:
-
-./scripts/beargrease/create-test-wallet.sh
-Run the full test harness:
-
-./scripts/beargrease/run-tests.sh
-For complete walkthrough, see:
-📘 Beginner’s Guide (Local Mode)
-
-🧪 GitHub CI Mode
-This repo includes a preconfigured .github/workflows/ci.yml workflow that uses Beargrease via directory checkout and runs tests automatically in GitHub CI.
-
-For setup, secrets, and workflow reference, see:
-📘 Beginner’s Guide to Directory Checkout Mode (CI)
-
-🗃️ Project Structure
-
+```
 placebo/
 ├── Anchor.toml
 ├── Cargo.toml
 ├── programs/
-├── scripts/
-│   └── beargrease/   <- copied from Beargrease repo
+│   └── placebo/
 ├── tests/
 │   └── placebo.test.mts
-└── .github/
-    └── workflows/
-        └── ci.yml
-👩‍🔬 Developer Notes
-This project uses modern TypeScript ESM syntax and dynamic test loading via ts-node. The test file automatically loads the deployed program ID from Anchor.toml.
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+└── README.md
+```
 
-🧷 License
-MIT License
-© 2025 Cabrillo! Labs
+---
+
+## 📦 Requirements
+
+- Node.js ≥ 18
+- Yarn (or npm)
+- Rust + Cargo
+- Solana CLI (`solana`)
+- Anchor CLI (`anchor`)
+- Docker + Docker Compose
+- [Beargrease](https://github.com/rgmelvin/beargrease) (for local or CI test orchestration)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install dependencies
+
+```bash
+anchor --version        # Anchor CLI must be installed
+solana --version        # Solana CLI must be installed
+yarn install            # or: npm install
+```
+
+### 2. Build the program
+
+```bash
+anchor build
+```
+
+### 3. Run local tests with Beargrease
+
+```bash
+../beargrease/scripts/create-test-wallet.sh
+../beargrease/scripts/run-tests.sh
+```
+
+This will:
+- Launch a local validator in Docker
+- Deploy the Placebo program
+- Run the test suite via Mocha/ts-node
+- Shut down the validator afterward
+
+---
+
+## 🧪 Test File Overview
+
+Tests live in: `tests/placebo.test.mts`
+
+This uses:
+- ESM imports (`.mts`)
+- Program ID auto-loaded from `Anchor.toml`
+- IDL loaded from `target/idl/placebo.json`
+- Wallet keypair from `.ledger/wallets/test-user.json`
+
+---
+
+## 🏗️ CI Integration
+
+Placebo uses the [Beargrease GitHub Action](https://github.com/rgmelvin/beargrease-by-cabrillo) in CI.
+
+### ✅ To trigger tests in GitHub Actions
+
+Ensure your workflow includes:
+
+```yaml
+- name: 🐻 Run Beargrease CI
+  uses: rgmelvin/beargrease-by-cabrillo@v1
+```
+
+You must define a secret:
+- `BEARGREASE_WALLET_SECRET_BASE64` → base64-encoded wallet used inside CI container
+
+---
+
+## 📚 Resources
+
+- [Beargrease Beginner Guide](https://github.com/rgmelvin/beargrease/blob/main/docs/Beargrease_Beginner_Guide.md)
+- [Beargrease GitHub Action](https://github.com/rgmelvin/beargrease-by-cabrillo)
+
+---
+
+## 🧼 Cleanup
+
+To remove validator containers and networks:
+
+```bash
+docker compose down
+```
+
+Or use the cleanup logic already embedded in `run-tests.sh`.
+
+---
+
+## 📝 License
+
+MIT © Cabrillo! Labs
+cabrilloweb3@gmail.com
