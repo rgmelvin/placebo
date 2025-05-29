@@ -1,120 +1,113 @@
 # Placebo 🧪
 
-Placebo is a minimal Solana Anchor test program used to validate local and CI-based test harnesses — particularly the [Beargrease](https://github.com/rgmelvin/beargrease) Docker test harness.
+This is a minimal Anchor program used for testing CI pipelines and validator harnesses. It is intentionally trivial: the contract does nothing, but the structure is complete and real. The goal is to test *the testing system itself*, not any particular Solana logic.
+
+Placebo is developed in tandem with [Beargrease](https://github.com/rgmelvin/beargrease), a transparent Docker-based Solana test harness with full CI support. This repository is intended to serve as both a reference implementation and a live demo target for Beargrease workflows.
 
 ---
 
-## 📁 Project Structure
+## 📦 Dependencies
 
-```
-placebo/
-├── Anchor.toml
-├── Cargo.toml
-├── programs/
-│   └── placebo/
-├── tests/
-│   └── placebo.test.mts
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-└── README.md
-```
+You will need:
+
+- Solana CLI ≥ 1.18.0
+- Anchor CLI ≥ 0.31.1
+- Docker and Docker Compose
+- Node.js ≥ 18 with TypeScript and Mocha
+- Beargrease v1.1.0+
 
 ---
 
-## 📦 Requirements
+## 🧪 Running Tests Locally
 
-- Node.js ≥ 18
-- Yarn (or npm)
-- Rust + Cargo
-- Solana CLI (`solana`)
-- Anchor CLI (`anchor`)
-- Docker + Docker Compose
-- [Beargrease](https://github.com/rgmelvin/beargrease) (for local or CI test orchestration)
-
----
-
-## 🚀 Getting Started
-
-### 1. Install dependencies
+To test locally using Beargrease:
 
 ```bash
-anchor --version        # Anchor CLI must be installed
-solana --version        # Solana CLI must be installed
-yarn install            # or: npm install
-```
+# Step into the project directory
+cd placebo
 
-### 2. Build the program
-
-```bash
-anchor build
-```
-
-### 3. Run local tests with Beargrease
-
-```bash
+# Create a test wallet
 ../beargrease/scripts/create-test-wallet.sh
+
+# Run the test harness
 ../beargrease/scripts/run-tests.sh
 ```
 
 This will:
-- Launch a local validator in Docker
-- Deploy the Placebo program
-- Run the test suite via Mocha/ts-node
-- Shut down the validator afterward
+- Start a Solana test validator in Docker
+- Deploy the placebo program
+- Patch the program ID dynamically
+- Run Mocha tests in ESM mode
+- Shut down and clean up
 
 ---
 
-## 🧪 Test File Overview
+## 🤖 CI Mode: GitHub Actions
 
-Tests live in: `tests/placebo.test.mts`
+Placebo supports Beargrease **Directory Checkout Mode** as of v1.1.0. This mode avoids requiring Beargrease to be installed as a GitHub Action and instead runs directly from a local checkout of the Beargrease repo.
 
-This uses:
-- ESM imports (`.mts`)
-- Program ID auto-loaded from `Anchor.toml`
-- IDL loaded from `target/idl/placebo.json`
-- Wallet keypair from `.ledger/wallets/test-user.json`
-
----
-
-## 🏗️ CI Integration
-
-Placebo uses the [Beargrease GitHub Action](https://github.com/rgmelvin/beargrease-by-cabrillo) in CI.
-
-### ✅ To trigger tests in GitHub Actions
-
-Ensure your workflow includes:
+To use this:
 
 ```yaml
-- name: 🐻 Run Beargrease CI
-  uses: rgmelvin/beargrease-by-cabrillo@v1
+# .github/workflows/ci.yml
+name: ☣️ Placebo CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 📁 Checkout Beargrease test harness
+        uses: actions/checkout@v4
+        with:
+          repository: rgmelvin/beargrease
+          path: beargrease
+
+      - name: 🧪 Run Beargrease Test Harness
+        run: ./beargrease/scripts/run-tests.sh
 ```
 
-You must define a secret:
-- `BEARGREASE_WALLET_SECRET_BASE64` → base64-encoded wallet used inside CI container
+This is the preferred approach for CI.
 
 ---
 
-## 📚 Resources
+## 🔬 Tests
 
-- [Beargrease Beginner Guide](https://github.com/rgmelvin/beargrease/blob/main/docs/Beargrease_Beginner_Guide.md)
-- [Beargrease GitHub Action](https://github.com/rgmelvin/beargrease-by-cabrillo)
+The test file lives in `tests/placebo.test.mts`. It is written in modern ESM TypeScript with Mocha:
+
+- Loads the IDL from `target/idl/placebo.json`
+- Reads the deployed program ID from `Anchor.toml`
+- Uses `ANCHOR_PROVIDER` and `ANCHOR_WALLET` for context
+- Confirms the program was deployed and reachable
+
+You can extend this test to simulate your own program behaviors.
 
 ---
 
-## 🧼 Cleanup
+## 🧹 Cleanup
 
-To remove validator containers and networks:
+To manually clean up after a test run:
 
 ```bash
 docker compose down
+rm -rf .wallet .beargrease
 ```
-
-Or use the cleanup logic already embedded in `run-tests.sh`.
 
 ---
 
-## 📝 License
+## 📚 References
 
-MIT © Cabrillo! Labs
-cabrilloweb3@gmail.com
+- [Beargrease Documentation](https://github.com/rgmelvin/beargrease)
+- [Anchor Docs](https://book.anchor-lang.com/)
+- [Solana CLI](https://docs.solana.com/cli)
+
+---
+
+MIT License · Cabrillo! Labs
