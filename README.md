@@ -2,7 +2,7 @@
 
 This is a minimal Anchor program used for testing CI pipelines and validator harnesses. It is intentionally trivial: the contract does nothing, but the structure is complete and real. The goal is to test *the testing system itself*, not any particular Solana logic.
 
-Placebo is developed in tandem with [Beargrease](https://github.com/rgmelvin/beargrease), a transparent Docker-based Solana test harness with full CI support. This repository is intended to serve as both a reference implementation and a live demo target for Beargrease workflows.
+Placebo is developed in tandem with [Beargrease](https://github.com/rgmelvin/beargrease-by-cabrillo), a transparent Docker-based Solana test harness with full CI support. This repository is intended to serve as both a reference implementation and a live demo target for Beargrease workflows.
 
 ---
 
