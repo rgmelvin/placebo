@@ -82,7 +82,7 @@ jobs:
       - name: 🐻 Symlink bg-testkit into node_modules
         run: |
           mkdir -p node_modules
-          ln -s ../../beargrease/beargrease/bg-testkit node_modules/bg-testkit
+          ln -sf ../../beargrease/beargrease/bg-testkit node_modules/bg-testkit
 
       - name: 🧪 Run Beargrease CI Harness
         run: ./scripts/run-ci-tests.sh
