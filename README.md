@@ -1,112 +1,79 @@
-# Placebo
+# Placebo – Example Solana Anchor Project Using Beargrease
 
-A minimal Solana Anchor program used to demonstrate the Beargrease testing harness.
+This is a minimal, working Solana Anchor test program built to demonstrate local and CI-based testing using [Beargrease](https://github.com/rgmelvin/beargrease-by-cabrillo).
 
-Placebo contains a single instruction (`say_hello`) and is designed as a sandbox for testing Solana program workflows using real-world tooling: TypeScript, Docker, and Beargrease.
-
----
-
-## 🧪 What It Does
-
-Placebo defines one instruction:
-
-```rust
-pub fn say_hello(_ctx: Context<Hello>) -> Result<()> {
-    msg!("👋 Hello from Placebo!");
-    Ok(())
-}
-```
-
-It logs a message on-chain. That’s it. But that’s enough to prove a full test loop works.
+Maintained by **Cabrillo! Labs** – contact: cabrilloweb3@gmail.com
 
 ---
 
-## 🧰 Tech Stack
+## 🧪 What’s in This Repo
 
-- [Anchor Framework](https://book.anchor-lang.com/)  
-- [Mocha](https://mochajs.org/) + [ts-mocha](https://www.npmjs.com/package/ts-mocha)
-- [Beargrease](https://github.com/rgmelvin/beargrease-by-cabrillo) (Docker-based test harness)
-- Solana CLI + Local validator
-- GitHub Actions (optional CI)
+This project is a functional Anchor program and test suite that demonstrates:
 
----
-
-## 🐻 Beargrease Dependency
-
-Placebo uses [Beargrease](https://github.com/rgmelvin/beargrease-by-cabrillo) to:
-
-- Launch a clean Dockerized Solana validator
-- Fund test wallets
-- Build and deploy the Anchor program
-- Run end-to-end TypeScript tests
+- Local testing using Beargrease v1.0.x
+- GitHub CI testing using Beargrease v1.1.0 Directory Checkout Mode
+- Dynamic program ID injection and validator setup
+- Mocha test integration via TypeScript ESM
 
 ---
 
-### 🧷 Symlink Requirement
+## 🧰 Prerequisites
 
-This file is a **symlink** to Beargrease:
+You will need:
 
-```bash
-scripts/run-tests.sh -> ../../beargrease/scripts/run-tests.sh
-```
+- Anchor v0.31.1
+- Solana CLI
+- Docker (for validator)
+- Node.js with `pnpm` or `npm`
+- `ts-node` and `mocha`
 
-In order for that symlink to work, clone both repos side-by-side:
-
-```
-Projects/
-├── beargrease/
-└── placebo/
-```
-
-If you clone them separately, you’ll need to recreate the symlink or call Beargrease directly.
+See the [Beargrease Beginner Guides](https://github.com/rgmelvin/beargrease-by-cabrillo/tree/main/docs) for installation instructions.
 
 ---
 
-## 🚀 Running Tests
+## 🧭 How to Use This Project
 
-To run the full Beargrease-powered test pipeline:
+### ▶️ Local Mode
 
-```bash
-./scripts/run-tests.sh
-```
+1. Clone this repo and Beargrease:
+   ```bash
+   git clone https://github.com/rgmelvin/placebo
+   git clone https://github.com/rgmelvin/beargrease-by-cabrillo
+Copy the Beargrease scripts:
 
-This will:
-- Spin up a Docker validator
-- Build + deploy the program
-- Inject the program ID into `Anchor.toml` and `lib.rs`
-- Run `yarn test` with your TypeScript suite
-- Tear everything down cleanly
+cp -r ../beargrease-by-cabrillo/scripts ./scripts/beargrease
+chmod +x ./scripts/beargrease/*.sh
+Create a test wallet:
 
----
+./scripts/beargrease/create-test-wallet.sh
+Run the full test harness:
 
-## 📦 Test Output
+./scripts/beargrease/run-tests.sh
+For complete walkthrough, see:
+📘 Beginner’s Guide (Local Mode)
 
-The test lives in [`tests/placebo.test.ts`](./tests/placebo.test.ts). It looks like:
+🧪 GitHub CI Mode
+This repo includes a preconfigured .github/workflows/ci.yml workflow that uses Beargrease via directory checkout and runs tests automatically in GitHub CI.
 
-```ts
-it("says hello", async () => {
-  const tx = await program.methods.sayHello().rpc();
-  console.log("📦 Transaction signature", tx);
-});
-```
+For setup, secrets, and workflow reference, see:
+📘 Beginner’s Guide to Directory Checkout Mode (CI)
 
-The expected output from the local validator:
+🗃️ Project Structure
 
-```bash
-👋 Hello from Placebo!
-```
+placebo/
+├── Anchor.toml
+├── Cargo.toml
+├── programs/
+├── scripts/
+│   └── beargrease/   <- copied from Beargrease repo
+├── tests/
+│   └── placebo.test.mts
+└── .github/
+    └── workflows/
+        └── ci.yml
+👩‍🔬 Developer Notes
+This project uses modern TypeScript ESM syntax and dynamic test loading via ts-node. The test file automatically loads the deployed program ID from Anchor.toml.
 
----
-
-## 📝 License
-
-MIT © 2024 Richard G. Melvin, Cabrillo!, Labs  
-Contact: [cabrilloweb3@gmail.com](mailto:cabrilloweb3@gmail.com)
-
----
-
-## 💬 About Cabrillo!, Labs
-
-Cabrillo!, Labs builds transparent tools for decentralized systems and scientific ownership.  
-Beargrease and Placebo are part of a broader effort to bring clarity, reproducibility, and equity to Web3 and research ecosystems.
----
+🧷 License
+MIT License
+© 2025 Cabrillo! Labs
